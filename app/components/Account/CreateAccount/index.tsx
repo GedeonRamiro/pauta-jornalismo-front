@@ -23,6 +23,21 @@ export default function CreateAccount() {
     resolver: zodResolver(schema),
   });
 
+  function formatCPF(e: React.ChangeEvent<HTMLInputElement>) {
+    let value = e.target.value.replace(/\D/g, "");
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    e.target.value = value;
+  }
+
+  function formatTelefone(e: React.ChangeEvent<HTMLInputElement>) {
+    let value = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
+    value = value.replace(/^(\d{2})(\d)/g, "($1) $2"); // adiciona parênteses
+    value = value.replace(/(\d{5})(\d{4})$/, "$1-$2"); // adiciona traço
+    e.target.value = value;
+  }
+
   function handleSubmitCreateAccount(data: FormData) {
     console.log(data);
   }
@@ -56,15 +71,7 @@ export default function CreateAccount() {
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-700 focus:border-gray-700 block w-full p-2.5"
           placeholder="000.000.000-00"
           maxLength={14}
-          {...register("cpf", {
-            onChange: (e) => {
-              let value = e.target.value.replace(/\D/g, "");
-              value = value.replace(/(\d{3})(\d)/, "$1.$2");
-              value = value.replace(/(\d{3})(\d)/, "$1.$2");
-              value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-              e.target.value = value;
-            },
-          })}
+          {...register("cpf", { onChange: formatCPF })}
         />
         {errors.cpf && (
           <p className="mt-1 text-sm text-red-600">{errors.cpf.message}</p>
@@ -84,14 +91,7 @@ export default function CreateAccount() {
           placeholder="(00) 00000-0000"
           maxLength={15}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-700 focus:border-gray-700 block w-full p-2.5"
-          {...register("telefone", {
-            onChange: (e) => {
-              let value = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
-              value = value.replace(/^(\d{2})(\d)/g, "($1) $2"); // adiciona parênteses
-              value = value.replace(/(\d{5})(\d{4})$/, "$1-$2"); // adiciona traço
-              e.target.value = value;
-            },
-          })}
+          {...register("telefone", { onChange: formatTelefone })}
         />
         {errors.telefone && (
           <p className="mt-1 text-sm text-red-600">{errors.telefone.message}</p>

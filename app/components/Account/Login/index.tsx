@@ -64,7 +64,7 @@ export default function Login() {
         type="submit"
         className="cursor-pointer text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center transition"
       >
-        Login
+        Entrar
       </button>
 
       <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
