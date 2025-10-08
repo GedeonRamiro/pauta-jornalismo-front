@@ -39,7 +39,15 @@ export default function CreateAccount() {
   }
 
   function handleSubmitCreateAccount(data: FormData) {
-    console.log(data);
+    // Remove caracteres não numéricos antes de enviar ao backend
+    const cleanedData = {
+      ...data,
+      cpf: data.cpf.replace(/\D/g, ""), // Ex: "12345678900"
+      telefone: data.telefone.replace(/\D/g, ""), // Ex: "86900000000"
+    };
+
+    console.log("Enviando para o backend:", cleanedData);
+    // aqui você faz o fetch/axios/post para o servidor
   }
 
   return (
@@ -48,7 +56,10 @@ export default function CreateAccount() {
       className="w-full max-w-sm mx-auto"
     >
       <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900">
+        <label
+          htmlFor="email"
+          className="block mb-2 text-sm font-medium text-gray-900"
+        >
           Email
         </label>
         <input
@@ -63,7 +74,10 @@ export default function CreateAccount() {
       </div>
 
       <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900">
+        <label
+          htmlFor="cpf"
+          className="block mb-2 text-sm font-medium text-gray-900"
+        >
           CPF
         </label>
         <input
@@ -99,7 +113,10 @@ export default function CreateAccount() {
       </div>
 
       <div className="mb-5">
-        <label className="block mb-2 text-sm font-medium text-gray-900">
+        <label
+          htmlFor="password"
+          className="block mb-2 text-sm font-medium text-gray-900"
+        >
           Senha
         </label>
         <input
