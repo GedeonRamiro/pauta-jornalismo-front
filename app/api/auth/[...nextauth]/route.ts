@@ -2,6 +2,7 @@ import axios from "axios";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { User } from "next-auth";
+import { signOut } from "next-auth/react";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,10 +18,13 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const response = await axios.post(`${process.env.API_URL}/auth`, {
-            email: credentials.email,
-            password: credentials.password,
-          });
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+            {
+              email: credentials.email,
+              password: credentials.password,
+            }
+          );
 
           const data = response.data;
 
@@ -28,6 +32,8 @@ export const authOptions: NextAuthOptions = {
             console.error("Formato de resposta inesperado:", data);
             return null;
           }
+
+          console.log("Usuário autenticado:", data.user);
 
           return {
             ...data.user,
@@ -66,4 +72,4 @@ export const authOptions: NextAuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, signOut };
