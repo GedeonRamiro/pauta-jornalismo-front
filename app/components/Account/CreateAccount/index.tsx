@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-export default function CreateAccount() {
+export default function CreateAccountForm() {
   const schema = z.object({
     email: z.string().email("Digite um email válido!"),
     password: z.string().min(6, "No mínimo 6 caracteres!"),
@@ -139,7 +139,7 @@ export default function CreateAccount() {
 
       <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
         <p className="text-sm text-gray-700">Já tem conta?</p>
-        <Link href="/">
+        <Link href="/login">
           <button
             type="button"
             className="cursor-pointer py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 transition"

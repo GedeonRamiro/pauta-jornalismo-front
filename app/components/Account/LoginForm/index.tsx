@@ -5,9 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { CgSpinner } from "react-icons/cg";
 import { useState } from "react";
 
-export default function Login() {
+export default function LoginForm() {
   const schema = z.object({
     email: z.string().email("Digite um email válido!"),
     password: z.string().min(6, "No mínimo 6 caracteres!"),
@@ -23,30 +26,32 @@ export default function Login() {
     resolver: zodResolver(schema),
   });
 
-  const [errorMsg, setErrorMsg] = useState("");
+  const router = useRouter();
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   async function handleSubmitLogin(data: FormData) {
-    setErrorMsg("");
-    console.log("Tentando login com:", data);
+    setButtonLoading(true);
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
 
-    console.log("Resultado do signIn:", result);
-
-    if (result?.error) {
-      // Mensagem amigável para o usuário
-      const msg =
-        result.error === "CredentialsSignin"
-          ? "Email ou senha incorretos"
-          : result.error;
-      setErrorMsg(msg);
-    } else if (result?.ok) {
-      window.location.href = "/dashboard";
+      if (result?.error) {
+        toast.error("Email ou senha incorretos!", {
+          position: "top-center",
+          autoClose: 5000,
+          theme: "colored",
+        });
+      } else if (result?.ok) {
+        router.push("/");
+      }
+    } catch (error: any) {
+      console.error("Erro inesperado ao fazer login:", error);
     }
+    setButtonLoading(false);
   }
 
   return (
@@ -89,15 +94,23 @@ export default function Login() {
           <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
         )}
       </div>
-
-      {errorMsg && <p className="text-red-600 text-sm mb-3">{errorMsg}</p>}
-
-      <button
-        type="submit"
-        className="cursor-pointer text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center transition"
-      >
-        Entrar
-      </button>
+      {buttonLoading ? (
+        <button
+          type="submit"
+          className="flex justify-center items-center cursor-pointer text-white bg-gray-500 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center transition"
+          disabled
+        >
+          <CgSpinner className="size-5 mr-2 animate-spin" />
+          Carregando...
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="cursor-pointer text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center transition"
+        >
+          Entrar
+        </button>
+      )}
 
       <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
         <p className="text-sm text-gray-700">Não tem conta?</p>
