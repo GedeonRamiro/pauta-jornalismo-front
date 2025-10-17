@@ -9,6 +9,7 @@ declare module "next-auth" {
     email: string;
     phone?: string;
     cpf?: string;
+    typeUser?: number;
     accessToken?: string;
   }
 
