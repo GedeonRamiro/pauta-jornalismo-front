@@ -38,7 +38,12 @@ const menuItems = [
     icon: <FaUser size={20} />,
     roles: [2, 3],
   },
-  { name: "Carros", href: "/carros", icon: <FaCar size={20} />, roles: [3] },
+  {
+    name: "Veículos",
+    href: "/vehicle",
+    icon: <FaCar size={20} />,
+    roles: [3],
+  },
   {
     name: "Câmeras",
     href: "/cameras",
@@ -47,7 +52,7 @@ const menuItems = [
   },
   {
     name: "Cargos",
-    href: "/cargos",
+    href: "/offices",
     icon: <FaBriefcase size={20} />,
     roles: [3],
   },
