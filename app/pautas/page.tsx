@@ -5,14 +5,10 @@ import Pagination from "../components/pagination";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import InputFilter from "../components/InputFilter";
+import { IPagination, IPauta } from "../types/types";
 
-interface IPautas {
-  count: number;
-  currentPage: number;
-  lastPage: number;
-  nextPage: number | null;
-  prevPage: number | null;
-  data: { id: string; name: string; infomation: string; createdAt: Date }[];
+interface IDataPauta extends IPagination {
+  data: IPauta[];
 }
 
 export default async function Pautas({
@@ -30,9 +26,7 @@ export default async function Pautas({
   const currentPage = parseInt(params.page ?? "1");
   const filterPautas = params.filter ?? "";
 
-  console.log(filterPautas);
-
-  let pautas: IPautas | null = null;
+  let pautas: IDataPauta | null = null;
 
   try {
     const response = await fetch(
@@ -55,13 +49,13 @@ export default async function Pautas({
 
   return (
     <Sidebar typeUser={typeUser}>
-      <div className="flex flex-col items-center justify-center mt-10">
-        <h3 className="text-gray-900 text-xl border-b-2 mb-6 font-bold">
+      <div className="flex justify-center">
+        <h3 className="text-gray-900 text-center text-xl border-b-2 mb-6 font-bold">
           TODAS AS PAUTAS
         </h3>
-        <div className="mb-6">
-          <InputFilter />
-        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center">
+        <div className="mb-6">{pautas && <InputFilter />}</div>
         <Card pautas={pautas?.data ?? []} />
         <div className="md:mt-10">
           <Pagination

@@ -5,27 +5,16 @@ import { authOptions } from "./api/auth/[...nextauth]/route"; // ajuste o caminh
 import Sidebar from "./components/Sidebar";
 import Card from "./components/Card";
 import Pagination from "./components/pagination";
+import { IPagination, IPauta } from "./types/types";
 
-interface IPautas {
-  count: number;
-  currentPage: number;
-  lastPage: number;
-  nextPage: number | null;
-  prevPage: number | null;
+interface IPautas extends IPagination {
   data: {
     id: string;
     name: string;
     cpf: string;
     email: string;
-    pauta: PautaInfoPros[];
+    pauta: IPauta[];
   };
-}
-
-interface PautaInfoPros {
-  id: string;
-  name: string;
-  infomation: string;
-  createdAt: Date;
 }
 
 export default async function Home() {
@@ -62,17 +51,17 @@ export default async function Home() {
     console.error("Erro ao buscar pautas:", error.message || error);
   }
 
-  console.log(pautaUser);
-
   return (
     <Sidebar typeUser={typeUser} userName={userName}>
-      <p className="text-right">
+      {/*  <p className="text-right">
         Bem-vindo, <strong>{session.user?.name}</strong>!
-      </p>
-      <div className="flex flex-col items-center justify-center mt-10">
-        <h3 className="text-gray-900 text-xl border-b-2 mb-6 font-bold">
+      </p> */}
+      <div className="flex justify-center">
+        <h3 className="text-gray-900 text-center text-xl border-b-2 mb-6 font-bold">
           PAUTAS
         </h3>
+      </div>
+      <div className="flex flex-col items-center justify-center">
         <Card pautas={pautaUser?.data.pauta ?? []} />
         <div className="md:mt-10">
           <Pagination
