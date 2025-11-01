@@ -34,7 +34,7 @@ export default function Pagination({
 
   return (
     <>
-      {count !== 0 && (
+      {count !== undefined && (
         <nav aria-label="Page navigation">
           <ul className="flex items-center flex-wrap gap-1 h-10 text-base">
             {total > 1 && (
