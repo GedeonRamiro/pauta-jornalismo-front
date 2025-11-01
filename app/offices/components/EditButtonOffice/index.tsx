@@ -11,7 +11,7 @@ type Props = {
   token: string;
 };
 
-export default function EditButton({ office, token }: Props) {
+export default function EditButtonOffice({ office, token }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

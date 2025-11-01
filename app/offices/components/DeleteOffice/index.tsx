@@ -11,7 +11,7 @@ type Props = {
   token: string;
 };
 
-export default function DeleteButton({ id, nameOffice, token }: Props) {
+export default function DeleteOffice({ id, nameOffice, token }: Props) {
   const router = useRouter();
 
   async function handleDelete() {

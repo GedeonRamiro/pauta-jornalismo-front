@@ -7,8 +7,8 @@ import Pagination from "../components/pagination";
 import Link from "next/link";
 import { IOffice, IPagination } from "../types/types";
 import CreateOfficeModal from "./components/CreateOfficeModal"; // ✅ novo
-import EditButton from "./components/EditButton";
-import DeleteButton from "./components/DeleteOffice";
+import EditButtonOffice from "./components/EditButtonOffice";
+import DeleteOffice from "./components/DeleteOffice";
 
 interface IDataOffice extends IPagination {
   data: IOffice[];
@@ -75,8 +75,8 @@ export default async function Offices({
                 <div className="w-full cursor-pointer">{office.name}</div>
               </Link>
               <div className="flex justify-end items-center gap-3 w-full">
-                <EditButton office={office} token={token} />
-                <DeleteButton
+                <EditButtonOffice office={office} token={token} />
+                <DeleteOffice
                   id={office.id}
                   nameOffice={office.name}
                   token={token}

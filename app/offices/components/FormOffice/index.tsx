@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@/app/components/loading";
+import { IOffice } from "@/app/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,7 +11,7 @@ import * as z from "zod";
 
 type Props = {
   token: string;
-  office?: { id: string; name: string };
+  office?: IOffice;
   onClose?: () => void;
 };
 
