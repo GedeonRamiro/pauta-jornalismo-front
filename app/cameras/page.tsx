@@ -6,6 +6,10 @@ import Pagination from "../components/pagination";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Link from "next/link";
 import { ICamera, IPagination } from "../types/types";
+import CreateCameraModal from "./components/CreateCameraModal";
+import DeleteButton from "./components/DeleteCamera";
+import EditButtonCamera from "./components/EditButtonOffice";
+import DeleteCamera from "./components/DeleteCamera";
 
 interface IDataCamera extends IPagination {
   data: ICamera[];
@@ -55,7 +59,11 @@ export default async function Cameras({
           CÂMERAS
         </h3>
       </div>
+
+      <CreateCameraModal token={token} />
+
       {!cameras && <p className="text-center">Nenhum câmera cadastrada!</p>}
+
       <div className="w-full mx-auto mt-8">
         {cameras !== null && (
           <div className="grid grid-cols-3 bg-gray-80 font-semibold py-2 px-4 rounded-t w-full">
@@ -67,34 +75,16 @@ export default async function Cameras({
 
         {cameras?.data.map((camera) => (
           <div key={camera.id}>
-            <Link href={`/cameras/${camera.id}`}>
-              <div className="grid grid-cols-3 border-b border-gray-200 py-2 px-4 cursor-pointer hover:bg-gray-50 w-full">
-                <div className="w-full">{camera.name}</div>
-                <div className="w-full text-center">
-                  {camera.identifierNumber}
-                </div>
-                <div className="flex justify-end gap-3 w-full">
-                  <button
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
-                    title="Editar"
-                  >
-                    <FiEdit
-                      className="text-gray-900 cursor-pointer"
-                      size={18}
-                    />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-800 transition-colors"
-                    title="Apagar"
-                  >
-                    <FiTrash2
-                      className="text-gray-900 cursor-pointer"
-                      size={18}
-                    />
-                  </button>
-                </div>
+            <div className="grid grid-cols-3 border-b border-gray-200 py-2 px-4  hover:bg-gray-50 w-full">
+              <Link href={`/cameras/${camera.id}`}>
+                <div className="w-full cursor-pointer">{camera.name}</div>
+              </Link>
+              <div className="text-center">{camera.identifierNumber}</div>
+              <div className="flex justify-end gap-3 w-full">
+                <EditButtonCamera camera={camera} token={token} />
+                <DeleteCamera id={camera.id} name={camera.name} token={token} />
               </div>
-            </Link>
+            </div>
           </div>
         ))}
       </div>
