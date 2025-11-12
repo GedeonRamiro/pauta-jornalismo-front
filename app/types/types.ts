@@ -12,6 +12,7 @@ export interface IUser {
   email: string;
   phone: string;
   typeUser: number;
+  office_id?: string;
 }
 
 export interface IVehicle {

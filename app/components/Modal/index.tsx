@@ -24,7 +24,7 @@ export default function Modal({
       {openModal && (
         <div
           className="fixed inset-0 z-50 flex justify-center items-center bg-black/40"
-          onClick={onClose}
+          //onClick={onClose}
         >
           <div
             className="relative bg-white rounded shadow-md w-full max-w-md mx-4"

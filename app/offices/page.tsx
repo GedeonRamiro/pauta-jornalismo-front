@@ -1,14 +1,13 @@
-// app/offices/page.tsx
-import { getServerSession } from "next-auth";
 import Sidebar from "../components/Sidebar";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 import Pagination from "../components/pagination";
 import Link from "next/link";
 import { IOffice, IPagination } from "../types/types";
 import CreateOfficeModal from "./components/CreateOfficeModal"; // ✅ novo
 import EditButtonOffice from "./components/EditButtonOffice";
 import DeleteOffice from "./components/DeleteOffice";
+import { getUserSession } from "../lib/session";
+import { UserPermission } from "../types/UserPermission";
+import { redirect } from "next/navigation";
 
 interface IDataOffice extends IPagination {
   data: IOffice[];
@@ -19,11 +18,9 @@ export default async function Offices({
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
+  const { userName, typeUser, token } = await getUserSession();
+  if (typeUser !== UserPermission.Admin) return redirect("/");
 
-  const token = String(session.user?.accessToken);
-  const typeUser = Number(session.user?.typeUser);
   const params = await searchParams;
   const currentPage = parseInt(params.page ?? "1");
 
@@ -49,7 +46,7 @@ export default async function Offices({
   }
 
   return (
-    <Sidebar typeUser={typeUser}>
+    <Sidebar typeUser={typeUser} userName={userName}>
       <div className="flex justify-center">
         <h3 className="text-gray-900 text-center text-xl border-b-2 mb-6 font-bold">
           Cargos

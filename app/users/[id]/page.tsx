@@ -1,11 +1,10 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Sidebar from "@/app/components/Sidebar";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Link from "next/link";
 import { IOffice, IPauta, IUser } from "@/app/types/types";
+import { getUserSession } from "@/app/lib/session";
 
 export interface IDataUser extends IUser {
   office: IOffice;
@@ -19,11 +18,20 @@ export default async function UserDetailPage({
 }) {
   const { id } = await params;
 
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
+  const { userName, typeUser, token } = await getUserSession();
 
-  const typeUser = Number(session.user?.typeUser);
-  const token = String(session.user?.accessToken);
+  const formatPhone = (phone: string | number) =>
+    String(phone)
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d{4})$/, "$1-$2");
+
+  const formatCPF = (cpf: string | number) =>
+    String(cpf)
+      .replace(/\D/g, "") // remove tudo que não for número
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{2})$/, "$1-$2");
 
   let user: IDataUser;
 
@@ -51,7 +59,7 @@ export default async function UserDetailPage({
   }
 
   return (
-    <Sidebar typeUser={typeUser}>
+    <Sidebar typeUser={typeUser} userName={userName}>
       <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-lg p-6 space-y-6">
         <div>
           <h2 className="mt-2 text-2xl font-bold text-gray-900">{user.name}</h2>
@@ -69,13 +77,13 @@ export default async function UserDetailPage({
                 <strong>Cargo:</strong> {user.office?.name}
               </li>
               <li>
-                <strong>Telefone:</strong> {user.phone}
+                <strong>Telefone:</strong> {formatPhone(user.phone)}
               </li>
               <li>
                 <strong>Email:</strong> {user.email}
               </li>
               <li>
-                <strong>Telefone:</strong> {user.cpf}
+                <strong>CPF:</strong> {formatCPF(user.cpf)}
               </li>
             </ul>
           </div>

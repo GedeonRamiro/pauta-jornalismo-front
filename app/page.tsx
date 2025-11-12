@@ -1,11 +1,8 @@
-// app/page.tsx
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "./api/auth/[...nextauth]/route"; // ajuste o caminho correto
 import Sidebar from "./components/Sidebar";
 import Card from "./components/Card";
 import Pagination from "./components/pagination";
 import { IPagination, IPauta } from "./types/types";
+import { getUserSession } from "./lib/session";
 
 interface IPautas extends IPagination {
   data: {
@@ -18,15 +15,7 @@ interface IPautas extends IPagination {
 }
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  const userName = String(session.user?.name);
-  const typeUser = Number(session.user?.typeUser);
-  const token = String(session.user?.accessToken);
+  const { userName, typeUser, token } = await getUserSession();
 
   let pautaUser: IPautas | null = null;
 
@@ -53,9 +42,6 @@ export default async function Home() {
 
   return (
     <Sidebar typeUser={typeUser} userName={userName}>
-      {/*  <p className="text-right">
-        Bem-vindo, <strong>{session.user?.name}</strong>!
-      </p> */}
       <div className="flex justify-center">
         <h3 className="text-gray-900 text-center text-xl border-b-2 mb-6 font-bold">
           PAUTAS

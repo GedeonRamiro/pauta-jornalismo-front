@@ -2,7 +2,6 @@ import { DefaultSession, DefaultUser } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
-  // Nosso tipo de usuário personalizado
   interface User extends DefaultUser {
     id: string;
     name: string;
@@ -13,7 +12,6 @@ declare module "next-auth" {
     accessToken?: string;
   }
 
-  // Tipagem da sessão (retornada por useSession)
   interface Session extends DefaultSession {
     accessToken?: string;
     user?: User;

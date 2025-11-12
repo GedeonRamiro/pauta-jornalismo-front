@@ -1,11 +1,13 @@
-import { getServerSession } from "next-auth";
 import Sidebar from "../components/Sidebar";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 import Pagination from "../components/pagination";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Link from "next/link";
 import { IPagination, IVehicle } from "../types/types";
+import EditButtonVehicle from "./components/EditButtonVehicle";
+import DeleteVehicle from "./components/DeleteVehicle";
+import CreateVehicleModal from "./components/CreateVehicleModal";
+import { getUserSession } from "../lib/session";
+import { UserPermission } from "../types/UserPermission";
+import { redirect } from "next/navigation";
 
 interface IDataVehicle extends IPagination {
   data: IVehicle[];
@@ -16,11 +18,8 @@ export default async function Vehicles({
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
-
-  const typeUser = Number(session.user?.typeUser);
-  const token = String(session.user?.accessToken);
+  const { userName, typeUser, token } = await getUserSession();
+  if (typeUser !== UserPermission.Admin) return redirect("/");
 
   const params = await searchParams;
   const currentPage = parseInt(params.page ?? "1");
@@ -49,13 +48,17 @@ export default async function Vehicles({
   }
 
   return (
-    <Sidebar typeUser={typeUser}>
+    <Sidebar typeUser={typeUser} userName={userName}>
       <div className="flex justify-center">
         <h3 className="text-gray-900 text-center text-xl border-b-2 mb-6 font-bold">
           VEÍCULOS
         </h3>
       </div>
+
+      <CreateVehicleModal token={token} />
+
       {!vehicles && <p className="text-center">Nenhum veículo cadastrado!</p>}
+
       <div className="w-full mx-auto mt-8">
         {vehicles !== null && (
           <div className="grid grid-cols-3 bg-gray-80 font-semibold py-2 px-4 rounded-t w-full">
@@ -66,32 +69,21 @@ export default async function Vehicles({
         )}
         {vehicles?.data.map((vehicle) => (
           <div key={vehicle.id}>
-            <Link href={`/vehicle/${vehicle.id}`}>
-              <div className="grid grid-cols-3 border-b border-gray-200 py-2 px-4 cursor-pointer hover:bg-gray-50 w-full">
-                <div className="w-full">{vehicle.model}</div>
-                <div className="w-full text-center">{vehicle.plate}</div>
-                <div className="flex justify-end gap-3 w-full">
-                  <button
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
-                    title="Editar"
-                  >
-                    <FiEdit
-                      className="text-gray-900 cursor-pointer"
-                      size={18}
-                    />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-800 transition-colors"
-                    title="Apagar"
-                  >
-                    <FiTrash2
-                      className="text-gray-900 cursor-pointer"
-                      size={18}
-                    />
-                  </button>
-                </div>
+            <div className="grid grid-cols-3 border-b border-gray-200 py-2 px-4  hover:bg-gray-50 w-full">
+              <Link href={`/vehicle/${vehicle.id}`}>
+                <div className="w-full cursor-pointer">{vehicle.model}</div>
+              </Link>
+              <div className="w-full text-center">{vehicle.plate}</div>
+              <div className="flex justify-end gap-3 w-full">
+                <EditButtonVehicle token={token} vehicle={vehicle} />
+                <DeleteVehicle
+                  id={vehicle.id}
+                  model={vehicle.model}
+                  plate={vehicle.plate}
+                  token={token}
+                />
               </div>
-            </Link>
+            </div>
           </div>
         ))}
       </div>

@@ -16,7 +16,7 @@ import { IoMdMenu, IoMdDocument, IoMdLogOut } from "react-icons/io";
 type SidebarProps = {
   children: ReactNode;
   typeUser: number;
-  userName?: string;
+  userName: string;
 };
 
 const menuItems = [
@@ -57,8 +57,8 @@ const menuItems = [
     roles: [3],
   },
   {
-    name: "Configurações",
-    href: "/settings",
+    name: "Relatorios",
+    href: "/relatorio",
     icon: <FaCog size={20} />,
     roles: [1, 2, 3],
   },
@@ -70,7 +70,11 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar({ children, typeUser }: SidebarProps) {
+export default function Sidebar({
+  children,
+  typeUser,
+  userName,
+}: SidebarProps) {
   const pathname = usePathname();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -151,6 +155,9 @@ export default function Sidebar({ children, typeUser }: SidebarProps) {
         transition-all duration-300 p-6
         `}
       >
+        <p className="text-right mb-4">
+          Olá, <strong>{userName}</strong>!
+        </p>
         {children}
       </main>
     </div>

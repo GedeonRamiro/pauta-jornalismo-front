@@ -10,6 +10,15 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@tiptap/extension-bold": "^3.10.3",
+    "@tiptap/extension-bullet-list": "^3.10.3",
+    "@tiptap/extension-heading": "^3.10.3",
+    "@tiptap/extension-italic": "^3.10.3",
+    "@tiptap/extension-ordered-list": "^3.10.3",
+    "@tiptap/react": "^3.10.3",
+    "@tiptap/starter-kit": "^3.10.3",
+    "@uiw/react-markdown-preview": "^5.1.5",
+    "@uiw/react-md-editor": "^4.0.8",
     "axios": "^1.12.2",
     "date-fns": "^4.1.0",
     "flowbite": "^3.1.2",
@@ -21,6 +30,7 @@
     "react-hook-form": "^7.64.0",
     "react-icons": "^5.5.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.4.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {

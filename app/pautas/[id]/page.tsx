@@ -1,10 +1,13 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Sidebar from "@/app/components/Sidebar";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ICamera, IOffice, IPauta, IUser, IVehicle } from "@/app/types/types";
+import MarkdownView from "@/app/components/MarkdownView";
+import Link from "next/link";
+import ModalConfirm from "@/app/components/ModalConfirm";
+import { UserPermission } from "@/app/types/UserPermission";
+import { getUserSession } from "@/app/lib/session";
 
 interface IDataPauta extends IPauta {
   user: IUser;
@@ -23,11 +26,8 @@ export default async function PautaDetailPage({
   params: { id: string };
 }) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
 
-  const typeUser = Number(session.user?.typeUser);
-  const token = String(session.user?.accessToken);
+  const { userName, typeUser, token } = await getUserSession();
 
   let pauta: IDataPauta;
 
@@ -53,20 +53,67 @@ export default async function PautaDetailPage({
     console.error("Erro ao buscar pauta:", error.message || error);
     return redirect("/pautas");
   }
+  async function deletePauta() {
+    "use server";
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/pauta/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Erro ao excluir pauta");
+
+      redirect("/pautas");
+    } catch (error) {
+      console.error("Erro ao excluir pauta:", error);
+      throw error;
+    }
+  }
 
   return (
-    <Sidebar typeUser={typeUser}>
+    <Sidebar typeUser={typeUser} userName={userName}>
       <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-lg p-6 space-y-6">
-        <div>
-          <p className="text-sm text-gray-500">
-            {format(new Date(pauta.createdAt), "dd/MM/yyyy", { locale: ptBR })}
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p className="text-sm text-gray-500">
+              {format(new Date(pauta.createdAt), "dd/MM/yyyy", {
+                locale: ptBR,
+              })}
+            </p>
+            <h2 className="mt-2 text-2xl font-bold text-gray-900">
+              {pauta.name}
+            </h2>
+          </div>
 
-          <h2 className="mt-2 text-2xl font-bold text-gray-900">
-            {pauta.name}
-          </h2>
+          {typeUser === UserPermission.Admin && (
+            <div className="flex gap-3 items-center">
+              <Link
+                href={`/pautas/createPauta?pautaId=${pauta.id}`}
+                className="px-3 py-1 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-900 transition font-medium"
+              >
+                Editar
+              </Link>
 
-          <p className="mt-3 text-gray-700">{pauta.infomation}</p>
+              <ModalConfirm
+                titleModal="Tem certeza que deseja excluir esta pauta?"
+                buttonDelete={
+                  <button className="px-3 py-1 text-gray-600 border border-gray-300 rounded-md hover:bg-red-50 hover:text-red-600 transition font-medium cursor-pointer">
+                    Excluir
+                  </button>
+                }
+                onConfirm={deletePauta}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-3">
+          <MarkdownView content={pauta.infomation} />
         </div>
 
         <hr className="border-gray-200" />
@@ -80,7 +127,6 @@ export default async function PautaDetailPage({
               <li>
                 <strong>Nome:</strong> {pauta.user.name}
               </li>
-
               <li>
                 <strong>Telefone:</strong> {pauta.user.phone}
               </li>
@@ -131,12 +177,11 @@ export default async function PautaDetailPage({
                 Equipe
               </h3>
               <ul className="list-disc list-inside space-y-1">
-                {pauta &&
-                  pauta.teams.map((team) => (
-                    <li key={team.id}>
-                      {team.name} ({team.office?.name ?? "Sem cargo"})
-                    </li>
-                  ))}
+                {pauta.teams.map((team) => (
+                  <li key={team.id}>
+                    {team.name} ({team.office?.name ?? "Sem cargo"})
+                  </li>
+                ))}
               </ul>
             </div>
           )}

@@ -1,15 +1,13 @@
-import { getServerSession } from "next-auth";
-import Sidebar from "../components/Sidebar";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 import Pagination from "../components/pagination";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Link from "next/link";
 import { ICamera, IPagination } from "../types/types";
 import CreateCameraModal from "./components/CreateCameraModal";
-import DeleteButton from "./components/DeleteCamera";
 import EditButtonCamera from "./components/EditButtonOffice";
 import DeleteCamera from "./components/DeleteCamera";
+import { getUserSession } from "../lib/session";
+import Sidebar from "../components/Sidebar";
+import { UserPermission } from "../types/UserPermission";
+import { redirect } from "next/navigation";
 
 interface IDataCamera extends IPagination {
   data: ICamera[];
@@ -20,11 +18,8 @@ export default async function Cameras({
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
-
-  const typeUser = Number(session.user?.typeUser);
-  const token = String(session.user?.accessToken);
+  const { userName, typeUser, token } = await getUserSession();
+  if (typeUser !== UserPermission.Admin) return redirect("/");
 
   const params = await searchParams;
   const currentPage = parseInt(params.page ?? "1");
@@ -53,7 +48,7 @@ export default async function Cameras({
   }
 
   return (
-    <Sidebar typeUser={typeUser}>
+    <Sidebar typeUser={typeUser} userName={userName}>
       <div className="flex justify-center">
         <h3 className="text-gray-900 text-center text-xl border-b-2 mb-6 font-bold">
           CÂMERAS
