@@ -18,14 +18,15 @@ export default function Start(accountProps: { accountProps: React.ReactNode }) {
 
         <div className="flex-1 bg-gray-800 p-8 flex flex-col justify-center text-center md:text-left">
           <h2 className="text-white font-poppins text-2xl md:text-3xl font-semibold mb-4">
-            Texto
+            Pauta-Jornalismo
           </h2>
           <p className="text-gray-200 text-sm md:text-base leading-relaxed">
-            Em linguística, a noção de texto é ampla e ainda aberta a uma
-            definição mais precisa. Grosso modo, pode ser entendido como
-            manifestação linguística das ideias de um autor, que serão
-            interpretadas pelo leitor de acordo com seus conhecimentos
-            linguísticos e culturais. Seu tamanho é variável.
+            Bem-vindo ao nosso sistema de organização de pauta. Aqui, cada
+            história começa com uma boa estrutura: definição da pauta,
+            distribuição das equipes e escolha dos recursos necessários para a
+            cobertura. A plataforma ajuda repórteres, editores, produtores e
+            cinegrafistas a coordenarem suas atividades de forma clara e
+            eficiente.
           </p>
         </div>
       </div>
