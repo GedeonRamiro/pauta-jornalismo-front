@@ -3,14 +3,9 @@
 import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  FaHome,
-  FaUser,
-  FaCog,
-  FaCar,
-  FaVideo,
-  FaBriefcase,
-} from "react-icons/fa";
+import { FaHome, FaUser, FaCar, FaVideo, FaBriefcase } from "react-icons/fa";
+import { HiDocumentReport } from "react-icons/hi";
+
 import { IoMdMenu, IoMdDocument, IoMdLogOut } from "react-icons/io";
 
 type SidebarProps = {
@@ -59,7 +54,8 @@ const menuItems = [
   {
     name: "Relatorios",
     href: "/relatorio",
-    icon: <FaCog size={20} />,
+    icon: <HiDocumentReport size={20} />,
+
     roles: [1, 2, 3],
   },
   {
@@ -113,10 +109,12 @@ export default function Sidebar({
           className="flex items-center h-16 px-4 border-b border-gray-700 cursor-pointer"
           onClick={() => isMobile && setIsOpen((prev) => !prev)}
         >
-          <span className="text-xl text-gray-400">
+          <span className="text-xl text-gray-400 md:hidden">
             <IoMdMenu />
           </span>
-          {isOpen && <span className="ml-2 text-lg font-semibold">Painel</span>}
+          {isOpen && (
+            <span className="ml-2 text-lg font-semibold">Pauta-Jornalismo</span>
+          )}
         </div>
 
         {/* Menu */}
