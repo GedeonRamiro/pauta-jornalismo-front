@@ -23,6 +23,7 @@ export default async function VehicleDetailPage({
 
   const typeUser = Number(session.user?.typeUser);
   const token = String(session.user?.accessToken);
+  const userName = String(session.user?.name);
 
   let vehicle: IDataVehicle;
 
@@ -44,13 +45,16 @@ export default async function VehicleDetailPage({
     }
 
     vehicle = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar Veículos:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar Veículos:",
+      error instanceof Error ? error.message : error
+    );
     return redirect("/vehicle");
   }
 
   return (
-    <Sidebar typeUser={typeUser}>
+    <Sidebar typeUser={typeUser} userName={userName}>
       <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-lg p-6 space-y-6">
         <div>
           <h2 className="mt-2 text-2xl font-bold text-gray-900">

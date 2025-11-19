@@ -48,8 +48,11 @@ export default function LoginForm() {
       } else if (result?.ok) {
         router.push("/");
       }
-    } catch (error: any) {
-      console.error("Erro inesperado ao fazer login:", error);
+    } catch (error: unknown) {
+      console.error(
+        "Erro inesperado ao fazer login:",
+        error instanceof Error ? error.message : error
+      );
     }
     setButtonLoading(false);
   }

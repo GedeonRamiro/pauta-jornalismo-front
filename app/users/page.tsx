@@ -55,8 +55,11 @@ export default async function Users({
     }
 
     users = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar usuários:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar usuários:",
+      error instanceof Error ? error.message : error
+    );
   }
 
   return (

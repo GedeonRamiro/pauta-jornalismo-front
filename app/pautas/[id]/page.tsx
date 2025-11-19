@@ -49,8 +49,11 @@ export default async function PautaDetailPage({
     }
 
     pauta = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar pauta:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar pauta:",
+      error instanceof Error ? error.message : error
+    );
     return redirect("/pautas");
   }
   async function deletePauta() {

@@ -87,8 +87,11 @@ export default function CreateAccountForm() {
 
       reset();
       route.replace("/login");
-    } catch (error: any) {
-      console.error("Erro ao criar usuário:", error.message || error);
+    } catch (error: unknown) {
+      console.error(
+        "Erro ao criar usuário:",
+        error instanceof Error ? error.message : error
+      );
       toast.error("Erro ao salvar usuário", {
         position: "top-center",
         autoClose: 5000,

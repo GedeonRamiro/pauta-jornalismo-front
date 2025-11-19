@@ -1,7 +1,6 @@
 import axios from "axios";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 
 export const authOptions: NextAuthOptions = {
@@ -39,10 +38,10 @@ export const authOptions: NextAuthOptions = {
             ...data.user,
             accessToken: data.accessToken,
           };
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error(
             "Erro ao autenticar:",
-            error.response?.data || error.message
+            error instanceof Error ? error.message : error
           );
           return null;
         }
@@ -56,14 +55,15 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as any).accessToken;
+        token.accessToken = user.accessToken;
         token.user = user;
       }
       return token;
     },
+
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string | undefined;
-      session.user = token.user as User;
+      session.accessToken = token.accessToken;
+      session.user = token.user!;
       return session;
     },
   },

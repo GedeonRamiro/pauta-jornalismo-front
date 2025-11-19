@@ -46,13 +46,16 @@ export default function DeleteVehicle({ id, model, plate, token }: Props) {
       });
 
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Erro ao apagar veículo", {
         position: "top-center",
         autoClose: 3000,
         theme: "colored",
       });
-      console.error("Erro ao apagar veículo:", error);
+      console.error(
+        "Erro ao apagar veículo:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 

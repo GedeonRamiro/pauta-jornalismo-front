@@ -36,8 +36,11 @@ export default async function Home() {
     }
 
     pautaUser = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar pautas:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar pautas:",
+      error instanceof Error ? error.message : error
+    );
   }
 
   return (

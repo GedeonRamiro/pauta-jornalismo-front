@@ -87,8 +87,11 @@ export default function VehicleForm({ token, vehicle, onClose }: Props) {
       reset();
       onClose?.();
       route.refresh();
-    } catch (error: any) {
-      console.error("Erro ao salvar veículo:", error.message || error);
+    } catch (error: unknown) {
+      console.error(
+        "Erro ao salvar veículo:",
+        error instanceof Error ? error.message : error
+      );
       toast.error("Erro ao salvar veículo", {
         position: "top-center",
         autoClose: 5000,

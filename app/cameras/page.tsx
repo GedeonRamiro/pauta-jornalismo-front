@@ -43,8 +43,11 @@ export default async function Cameras({
     }
 
     cameras = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar câmeras:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar câmeras:",
+      error instanceof Error ? error.message : error
+    );
   }
 
   return (

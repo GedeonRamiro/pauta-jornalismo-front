@@ -79,8 +79,11 @@ export default function OfficeForm({ token, office, onClose }: Props) {
       reset();
       onClose?.();
       route.refresh();
-    } catch (error: any) {
-      console.error("Erro ao salvar cargo:", error.message || error);
+    } catch (error: unknown) {
+      console.error(
+        "Erro ao salvar cargo:",
+        error instanceof Error ? error.message : error
+      );
       toast.error("Erro ao salvar cargo", {
         position: "top-center",
         autoClose: 5000,

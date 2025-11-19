@@ -140,7 +140,7 @@ export default function FormPauta({ token, typeUser, onClose }: Props) {
         const pauta: IPauta = {
           name: data.name || "",
           infomation: data.infomation || "",
-          team: data.teams?.map((user: any) => user.id) || [],
+          team: data.teams?.map((user: IUser) => user.id) || [],
           vehicleId: data.vehicle?.id || "",
           cameraId: data.camera?.id || "",
         };
@@ -191,12 +191,16 @@ export default function FormPauta({ token, typeUser, onClose }: Props) {
       );
       router.replace(`/pautas/${pautaId || result.id}`);
       onClose?.();
-    } catch (e: any) {
-      toast.error(e.message || "Erro ao salvar pauta", {
+    } catch (error: unknown) {
+      toast.error("Erro ao salvar pauta", {
         position: "top-center",
         autoClose: 5000,
         theme: "colored",
       });
+      console.error(
+        "Erro ao salvar pauta!",
+        error instanceof Error ? error.message : error
+      );
     } finally {
       setLoading(false);
     }

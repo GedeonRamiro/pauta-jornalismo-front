@@ -45,13 +45,16 @@ export default function DeleteCamera({ id, name, token }: Props) {
       });
 
       router.replace("/cameras");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Erro ao apagar câmera", {
         position: "top-center",
         autoClose: 3000,
         theme: "colored",
       });
-      console.error("Erro ao apagar câmera:", error);
+      console.error(
+        "Erro ao apagar câmera:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 

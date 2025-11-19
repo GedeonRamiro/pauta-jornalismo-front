@@ -41,8 +41,11 @@ export default async function Offices({
     if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
     offices = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar cargos:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar cargos:",
+      error instanceof Error ? error.message : error
+    );
   }
 
   return (

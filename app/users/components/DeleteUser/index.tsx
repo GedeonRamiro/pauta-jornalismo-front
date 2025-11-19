@@ -45,13 +45,16 @@ export default function DeleteUser({ id, name, token }: Props) {
       });
 
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Erro ao apagar usuário!", {
         position: "top-center",
         autoClose: 3000,
         theme: "colored",
       });
-      console.error("Erro ao apagar usuário!", error);
+      console.error(
+        "Erro ao apagar usuário!",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 

@@ -4,7 +4,7 @@ import Loading from "@/app/components/loading";
 import { IOffice, IPagination, IUser } from "@/app/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
@@ -110,8 +110,11 @@ export default function UserForm({ token, user, onClose }: Props) {
       reset();
       onClose?.();
       router.refresh();
-    } catch (err: any) {
-      console.error("Erro ao atualizar usuário:", err.message || err);
+    } catch (error: unknown) {
+      console.error(
+        "Erro ao atualizar usuário:",
+        error instanceof Error ? error.message : error
+      );
       toast.error("Erro ao atualizar usuário!", {
         position: "top-center",
         autoClose: 5000,
@@ -122,7 +125,7 @@ export default function UserForm({ token, user, onClose }: Props) {
     }
   };
 
-  const fetchOffices = async () => {
+  const fetchOffices = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
@@ -138,16 +141,19 @@ export default function UserForm({ token, user, onClose }: Props) {
 
       const data = (await response.json()) as IDataOffice;
       setOffices(data);
-    } catch (err: any) {
-      console.error("Erro ao buscar cargos:", err.message || err);
+    } catch (error: unknown) {
+      console.error(
+        "Erro ao buscar cargos:",
+        error instanceof Error ? error.message : error
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchOffices();
-  }, [token]);
+  }, [fetchOffices]);
 
   return (
     <div className="p-5">

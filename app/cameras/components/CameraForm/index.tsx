@@ -83,8 +83,11 @@ export default function CameraForm({ token, camera, onClose }: Props) {
       reset();
       onClose?.();
       route.refresh();
-    } catch (error: any) {
-      console.error("Erro ao salvar câmera:", error.message || error);
+    } catch (error: unknown) {
+      console.error(
+        "Erro ao salvar câmera:",
+        error instanceof Error ? error.message : error
+      );
       toast.error("Erro ao salvar câmera", {
         position: "top-center",
         autoClose: 5000,

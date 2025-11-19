@@ -53,8 +53,11 @@ export default async function UserDetailPage({
     }
 
     user = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar usuários:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar usuários:",
+      error instanceof Error ? error.message : error
+    );
     return redirect("/users");
   }
 

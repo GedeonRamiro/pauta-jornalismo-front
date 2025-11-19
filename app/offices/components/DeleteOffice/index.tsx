@@ -45,13 +45,16 @@ export default function DeleteOffice({ id, nameOffice, token }: Props) {
       });
 
       router.replace("/offices");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Erro ao apagar cargo", {
         position: "top-center",
         autoClose: 3000,
         theme: "colored",
       });
-      console.error("Erro ao apagar cargo:", error);
+      console.error(
+        "Erro ao apagar cargo:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 

@@ -43,8 +43,11 @@ export default async function Vehicles({
     }
 
     vehicles = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar veículos:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar veículos:",
+      error instanceof Error ? error.message : error
+    );
   }
 
   return (

@@ -46,8 +46,11 @@ export default async function Pautas({
       throw new Error(`Erro HTTP: ${response.status}`);
     }
     pautas = await response.json();
-  } catch (error: any) {
-    console.error("Erro ao buscar pautas:", error.message || error);
+  } catch (error: unknown) {
+    console.error(
+      "Erro ao buscar pautas:",
+      error instanceof Error ? error.message : error
+    );
   }
 
   return (
